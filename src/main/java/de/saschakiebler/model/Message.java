@@ -1,11 +1,27 @@
-package de.saschakiebler;
+package de.saschakiebler.model;
 
 import java.time.LocalDateTime;
 
-public class Message {
-    private String sender;
-    private String text;
-    private LocalDateTime timestamp;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Message extends PanacheEntity{
+
+    @Column(length = 40)
+    public String sender;
+
+    @Column(length = 255)
+    public String text;
+
+    @Column
+    public LocalDateTime timestamp;
+
+    // Constructors
+    public Message() {
+        // Empty constructor
+    }
 
     public Message(String sender, String text) {
         this.sender = sender;

@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; }
         .chat-container { width: 70%; margin: auto; }
-        .messages { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        .messages { height: 300px; overflow-y: scroll; border: 1px solid #000000; padding: 10px; }
         .message { margin-bottom: 10px; }
         .sender { font-weight: bold; }
         .input-container { margin-top: 20px; }
@@ -24,7 +24,7 @@
             {/for}
         </div>
         <div class="input-container">
-            <form action="/send-message" method="POST">
+            <form action="/chat/send-message" method="POST">
                 <input type="text" name="message" placeholder="Type a message..." required>
                 <button type="submit">Send</button>
             </form>
