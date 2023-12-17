@@ -3,6 +3,7 @@ package de.saschakiebler.resource;
 import java.util.List;
 
 import de.saschakiebler.model.Message;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import jakarta.annotation.Resource;
@@ -44,9 +45,22 @@ public class ChatResource {
         Message.persist(message);
 
         if(message.isPersistent())
+
         return Response.seeOther(URI.create("/chat")).build();
         else
         return Response.serverError().build();
+    }
+
+
+    public Message answerMessage(String messageText) {
+        String apiKey = System.getenv("OPENAI_API_KEY");
+        OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
+
+        String answer = model.generate(messageText);
+
+        return new Message("AI", answer);
+
+
     }
 }
 
