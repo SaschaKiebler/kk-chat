@@ -5,8 +5,14 @@
     <title>Chat Application</title>
     <!-- Add your CSS styles here -->
     <style>
+            .dark-mode {
+                background-color: #343541!important;
+                color: white!important;
+            }
+
             body { 
                 font-family: Arial, sans-serif; 
+                background-color: #fff;
             }
 
             .chat-container { 
@@ -51,8 +57,9 @@
 
             #submit-btn {
                 width: 20%;
-                height: 40px;
                 border: 1px solid #ccc;
+                background-color: #007bba;
+                color: white;
                 border-radius: 5px;
                 padding: 5px;
                 font-size: 16px;
@@ -78,11 +85,26 @@
             {/for}
         </div>
         <div class="input-container">
-            <form class="form" action="/chat/send-message" method="POST">
+            <form class="form" action="/chat/send-message" method="POST" onsubmit="disable()">
                 <input id="input" type="text" name="message" placeholder="Type a message..." required>
-                <button id="submit-btn" type="submit">Send</button>
+                <button  id="submit-btn" type="submit">Send</button>
+                dark mode: <input type="checkbox" id="dark-mode" onclick="toggleDarkMode()"  >
             </form>
+            
+
         </div>
     </div>
 </body>
+
+<script>
+    function disable() {
+        document.getElementById("submit-btn").disabled = true;
+
+    }
+
+    function toggleDarkMode() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
+    }
+</script>
 </html>

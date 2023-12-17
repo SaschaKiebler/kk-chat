@@ -50,6 +50,10 @@ public class ChatResource {
         Message message = new Message("User", messageText);
         Message.persist(message);
 
+    
+
+
+
         return answerMessage(messageText)
             .onItem().transform(answer -> {
                 if (message.isPersistent()) {
@@ -65,7 +69,7 @@ public class ChatResource {
             String apiKey = System.getenv("OPENAI_API_KEY");
             OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
             
-            Message answer = new Message("AI", model.generate(messageText));
+            Message answer = new Message("Assistant", model.generate(messageText));
             Message.persist(answer);
             return answer;
         }).runSubscriptionOn(executorService); // Run on a separate thread
