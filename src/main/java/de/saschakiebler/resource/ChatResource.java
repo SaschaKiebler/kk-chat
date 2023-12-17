@@ -1,11 +1,13 @@
 package de.saschakiebler.resource;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import de.saschakiebler.model.Message;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,41 +28,48 @@ import java.net.URI;
 @Transactional
 public class ChatResource {
     @Inject Template chat;
+    
+    
+    @Inject
+    ExecutorService executorService; // Inject an ExecutorService for asynchronous execution
 
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get() {
         List<Message> messages = Message.listAll();
+        //reverse the list to get the newest messages first
+        messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
         return chat.data("messages", messages);
     }
 
     @POST
     @Path("/send-message")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response sendMessage(@FormParam("message") String messageText) {
-        // Add message to your messages list or database
-
+    public Uni<Response> sendMessage(@FormParam("message") String messageText) {
         Message message = new Message("User", messageText);
         Message.persist(message);
 
-        if(message.isPersistent())
-
-        return Response.seeOther(URI.create("/chat")).build();
-        else
-        return Response.serverError().build();
+        return answerMessage(messageText)
+            .onItem().transform(answer -> {
+                if (message.isPersistent()) {
+                    return Response.seeOther(URI.create("/chat")).build();
+                } else {
+                    return Response.serverError().build();
+                }
+            });
     }
 
-
-    public Message answerMessage(String messageText) {
-        String apiKey = System.getenv("OPENAI_API_KEY");
-        OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
-
-        String answer = model.generate(messageText);
-
-        return new Message("AI", answer);
-
-
+    public Uni<Message> answerMessage(String messageText) {
+        return Uni.createFrom().item(() -> {
+            String apiKey = System.getenv("OPENAI_API_KEY");
+            OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
+            
+            Message answer = new Message("AI", model.generate(messageText));
+            Message.persist(answer);
+            return answer;
+        }).runSubscriptionOn(executorService); // Run on a separate thread
     }
+
 }
 

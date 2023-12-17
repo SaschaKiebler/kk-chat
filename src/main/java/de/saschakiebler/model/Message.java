@@ -12,7 +12,7 @@ public class Message extends PanacheEntity{
     @Column(length = 40)
     public String sender;
 
-    @Column(length = 255)
+    @Column(length = 4000)
     public String text;
 
     @Column
