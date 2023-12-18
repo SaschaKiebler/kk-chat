@@ -22,8 +22,7 @@ public class ChatService {
             String apiKey = System.getenv("OPENAI_API_KEY");
             OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
             
-            Message answer = new Message("Assistant", model.generate(messageText));
-            Message.persist(answer);
+            Message answer = safeMessage(model.generate(messageText), MessageRoles.ASSISTANT);
             return answer;
         }).runSubscriptionOn(executorService); // Run on a separate thread
     }

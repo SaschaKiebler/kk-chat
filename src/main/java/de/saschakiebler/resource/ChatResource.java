@@ -2,6 +2,7 @@ package de.saschakiebler.resource;
 
 import java.util.List;
 
+import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Message;
 import de.saschakiebler.service.ChatService;
 import io.quarkus.qute.Template;
@@ -45,8 +46,7 @@ public class ChatResource {
     @Path("/send-message")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Uni<Response> sendMessage(@FormParam("message") String messageText) {
-        Message message = new Message("User", messageText);
-        Message.persist(message);
+        Message message = chatService.safeMessage(messageText, MessageRoles.USER);
 
         return chatService.answerMessage(messageText)
             .onItem().transform(answer -> {
