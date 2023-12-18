@@ -1,10 +1,9 @@
 package de.saschakiebler.resource;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import de.saschakiebler.model.Message;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import de.saschakiebler.service.ChatService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Uni;
@@ -29,9 +28,8 @@ import java.net.URI;
 public class ChatResource {
     @Inject Template chat;
     
-    
-    @Inject
-    ExecutorService executorService; // Inject an ExecutorService for asynchronous execution
+    @Inject ChatService chatService;
+   
 
 
     @GET
@@ -50,11 +48,7 @@ public class ChatResource {
         Message message = new Message("User", messageText);
         Message.persist(message);
 
-    
-
-
-
-        return answerMessage(messageText)
+        return chatService.answerMessage(messageText)
             .onItem().transform(answer -> {
                 if (message.isPersistent()) {
                     return Response.seeOther(URI.create("/chat")).build();
@@ -64,16 +58,7 @@ public class ChatResource {
             });
     }
 
-    public Uni<Message> answerMessage(String messageText) {
-        return Uni.createFrom().item(() -> {
-            String apiKey = System.getenv("OPENAI_API_KEY");
-            OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
-            
-            Message answer = new Message("Assistant", model.generate(messageText));
-            Message.persist(answer);
-            return answer;
-        }).runSubscriptionOn(executorService); // Run on a separate thread
-    }
+    
 
 }
 
