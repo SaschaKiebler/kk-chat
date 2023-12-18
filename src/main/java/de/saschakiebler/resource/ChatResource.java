@@ -7,6 +7,7 @@ import de.saschakiebler.model.Message;
 import de.saschakiebler.service.ChatService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
@@ -17,9 +18,12 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseEventSink;
 
 import java.net.URI;
 
@@ -56,6 +60,28 @@ public class ChatResource {
                     return Response.serverError().build();
                 }
             });
+    }
+
+
+    @POST
+    @Path("/streamAnswer")
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    public void streamAnswer(@QueryParam("messageText") String messageText, 
+                             @Context SseEventSink eventSink, 
+                             @Context Sse sse) {
+        Multi<String> responseStream = chatService.streamAnswer(messageText);
+
+        responseStream.subscribe().with(
+            item -> {
+                eventSink.send(sse.newEvent(item));
+            },
+            failure -> {
+                eventSink.close();
+            },
+            () -> {
+                eventSink.close();
+            }
+        );
     }
 
     

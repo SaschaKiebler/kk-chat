@@ -83,9 +83,10 @@
                     <span>{message.text}</span>
                 </div>
             {/for}
+            <div class="messages" id="messages"></div>
         </div>
         <div class="input-container">
-            <form class="form" action="/chat/send-message" method="POST" onsubmit="disable()">
+            <form class="form" id="chat-form">
                 <input id="input" type="text" name="message" placeholder="Type a message..." required>
                 <button  id="submit-btn" type="submit">Send</button>
                 dark mode: <input type="checkbox" id="dark-mode" onclick="toggleDarkMode()"  >
@@ -120,5 +121,57 @@
             localStorage.setItem("dark-mode", "disabled");
         }
     }
+
+    // Function to add a message to the messages div
+    function addMessage(text) {
+            var messagesDiv = document.getElementById('messages');
+            var messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+        }
+
+        // Function to handle form submission
+        document.getElementById('chat-form').onsubmit = function(event) {
+            event.preventDefault();
+            var input = document.getElementById('input');
+            var messageText = input.value;
+            input.value = ''; // Clear the input
+
+            // You need to implement how to send this message to your server
+            // For example, you might use fetch API or another method depending on your backend setup
+            fetch('/chat/streamAnswer?messageText=' + encodeURIComponent(messageText), {
+                method: 'POST'
+            }).then(response => {
+                console.log('Message sent');
+            }).catch(error => {
+                console.error('Error sending message:', error);
+            });
+        };
+
+        // Connect to the SSE endpoint
+        var eventSource = new EventSource('/chat/streamAnswer');
+
+        // Temporary string to hold incomplete messages
+        var tempString = '';
+
+        // Listen for messages
+        eventSource.onmessage = function(event) {
+            // Check if the data ends with a newline character
+            if (event.data.endsWith('\n')) {
+                // Concatenate with the tempString and then add it as a message
+                addMessage(tempString + event.data.trim());
+                tempString = '';
+            } else {
+                // Append the data to tempString
+                tempString += event.data;
+            }
+        };
+
+        // Handle any errors
+        eventSource.onerror = function(err) {
+            console.error('EventSource failed:', err);
+            eventSource.close();
+        };
 </script>
 </html>
