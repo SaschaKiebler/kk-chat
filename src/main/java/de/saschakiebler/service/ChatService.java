@@ -43,7 +43,7 @@ public class ChatService {
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
             // Create the OpenAI Streaming model
             StreamingChatLanguageModel model = OpenAiStreamingChatModel.withApiKey(System.getenv("OPENAI_API_KEY"));
-
+            
             List<ChatMessage> messages = asList(
                     userMessage(messageText)
             );
