@@ -9,7 +9,6 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -29,22 +28,7 @@ import static java.util.Arrays.asList;
 public class ChatService {
 
      @Inject
-    ExecutorService executorService; // Inject an ExecutorService for asynchronous execution
-
-
-
-/* 
-
-    public Uni<Message> answerMessage(String messageText) {
-        return Uni.createFrom().item(() -> {
-            String apiKey = System.getenv("OPENAI_API_KEY");
-            OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
-            
-            Message answer = safeMessage(model.generate(messageText), MessageRoles.ASSISTANT);
-            return answer;
-        }).runSubscriptionOn(executorService); // Run on a separate thread
-    }
-*/
+    ExecutorService executorService; 
 
     public Message safeMessage(String messageText, MessageRoles sender) {
         Message message = new Message(sender.getRole(), messageText);
