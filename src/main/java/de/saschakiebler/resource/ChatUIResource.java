@@ -2,9 +2,11 @@ package de.saschakiebler.resource;
 
 import java.util.List;
 
+import org.jboss.resteasy.reactive.RestStreamElementType;
+
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Message;
-import de.saschakiebler.service.ChatService;
+import de.saschakiebler.service.ChatUIService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Multi;
@@ -24,10 +26,10 @@ import jakarta.ws.rs.sse.SseEventSink;
 @Path("/chat")
 @Resource
 @Transactional
-public class ChatResource {
+public class ChatUIResource {
     @Inject Template chat;
     
-    @Inject ChatService chatService;
+    @Inject ChatUIService chatService;
    
 
 
@@ -43,7 +45,7 @@ public class ChatResource {
 
     @GET
     @Path("/streamAnswer")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
+    @RestStreamElementType(MediaType.TEXT_PLAIN)
     public void streamAnswer(@QueryParam("messageText") String messageText, 
                              @Context SseEventSink eventSink, 
                              @Context Sse sse){

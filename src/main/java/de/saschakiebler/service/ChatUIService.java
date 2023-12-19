@@ -25,7 +25,7 @@ import static java.util.Arrays.asList;
 
 @Transactional
 @ApplicationScoped
-public class ChatService {
+public class ChatUIService {
 
      @Inject
     ExecutorService executorService; 

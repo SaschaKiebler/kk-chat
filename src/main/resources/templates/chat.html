@@ -105,7 +105,6 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
     // reload the chat after the stream is closed
     eventSource.onclose = function() {
         console.log('EventSource closed');
-        // Optionally reload the page if the EventSource closed
         //reload the page to format the chat correctly. This has to be fixed.!!!!
         location.reload();
          
