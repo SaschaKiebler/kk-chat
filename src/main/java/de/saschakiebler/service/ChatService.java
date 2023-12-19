@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 
 import dev.langchain4j.model.output.Response;
 
-import static dev.langchain4j.data.message.SystemMessage.systemMessage;
 import static dev.langchain4j.data.message.UserMessage.userMessage;
 import static java.util.Arrays.asList;
 
@@ -32,6 +31,10 @@ public class ChatService {
      @Inject
     ExecutorService executorService; // Inject an ExecutorService for asynchronous execution
 
+
+
+/* 
+
     public Uni<Message> answerMessage(String messageText) {
         return Uni.createFrom().item(() -> {
             String apiKey = System.getenv("OPENAI_API_KEY");
@@ -41,14 +44,14 @@ public class ChatService {
             return answer;
         }).runSubscriptionOn(executorService); // Run on a separate thread
     }
-
+*/
 
     public Message safeMessage(String messageText, MessageRoles sender) {
         Message message = new Message(sender.getRole(), messageText);
         Message.persist(message);
         return message;
+        
     }
-
 
 
     public Multi<String> streamAnswer(String messageText) {
@@ -72,7 +75,11 @@ public class ChatService {
                 @Override
                 public void onComplete(Response<AiMessage> response) {
                     // Complete the stream
-                    emitter.complete();
+                    Uni.createFrom().item(() -> {
+                        safeMessage(response.content().text(), MessageRoles.ASSISTANT);
+                        return null;
+                    }).runSubscriptionOn(executorService)
+                    .subscribe().with(item -> emitter.complete());
                 }
 
                 @Override
@@ -82,6 +89,7 @@ public class ChatService {
                 }
             });
         });
+
 
         // Return the Multi stream
         return responseStream;

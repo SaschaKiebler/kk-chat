@@ -46,6 +46,7 @@ public class ChatResource {
         return chat.data("messages", messages);
     }
 
+    /*
     @POST
     @Path("/send-message")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -61,15 +62,19 @@ public class ChatResource {
                 }
             });
     }
+*/
 
-
-    @POST
+    @GET
     @Path("/streamAnswer")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public void streamAnswer(@QueryParam("messageText") String messageText, 
                              @Context SseEventSink eventSink, 
-                             @Context Sse sse) {
+                             @Context Sse sse){
+        
+        chatService.safeMessage(messageText, MessageRoles.USER);
         Multi<String> responseStream = chatService.streamAnswer(messageText);
+
+
 
         responseStream.subscribe().with(
             item -> {
