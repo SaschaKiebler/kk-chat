@@ -23,6 +23,10 @@ import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
 
 
+/**
+ * Represents a resource for handling chat-related operations in the UI.
+ * This class is responsible for providing HTML templates and streaming chat responses.
+ */
 @Path("/chat")
 @Resource
 @Transactional
@@ -30,6 +34,14 @@ public class ChatUIResource {
     @Inject Template chat;
     
     @Inject ChatUIService chatService;
+
+    public ChatUIResource(Template chat, ChatUIService chatService) {
+        this.chat = chat;
+        this.chatService = chatService;
+    }
+
+    public ChatUIResource() {
+    }
    
 
 
