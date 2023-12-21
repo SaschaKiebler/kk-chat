@@ -11,6 +11,15 @@
 </head>
 <body class="dark-mode">
     <div class="chat-container">
+    <div class="conversations">
+        <ul>
+        {#if conversations.size != 0}
+            {#for conversation in conversations}
+                <li><a href="/chat?conversationId={conversation.id}">{conversation.name}</a></li>
+            {/for}
+        {/if}
+        </ul>
+    </div>
         <div class="messages">
             <div id="messages"></div>
             {#for message in messages}

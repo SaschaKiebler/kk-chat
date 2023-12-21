@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.resource.ChatUIResource;
 import de.saschakiebler.service.ChatUIService;
+import de.saschakiebler.service.ConversationService;
+import de.saschakiebler.service.MessageService;
 
 import static org.mockito.Mockito.*;
 
@@ -37,15 +39,25 @@ class ChatUIResourceTest {
     @Mock
     SseEventSink eventSink;
 
+    @Mock
+    ConversationService conversationService;
+
+    @Mock
+    MessageService messageService;
+
     @InjectMocks
     ChatUIResource chatUIResource;
+
+
 
 
 @BeforeEach
 void setup() {
     chat = mock(Template.class);
     chatService = mock(ChatUIService.class);
-    chatUIResource = new ChatUIResource(chat, chatService);
+    conversationService = mock(ConversationService.class);
+    messageService = mock(MessageService.class);
+    chatUIResource = new ChatUIResource(chat, chatService, conversationService, messageService);
 }
 
     @Test

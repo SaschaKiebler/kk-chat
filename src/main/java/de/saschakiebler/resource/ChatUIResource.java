@@ -5,8 +5,11 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestStreamElementType;
 
 import de.saschakiebler.enums.MessageRoles;
+import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
 import de.saschakiebler.service.ChatUIService;
+import de.saschakiebler.service.ConversationService;
+import de.saschakiebler.service.MessageService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Multi;
@@ -35,9 +38,15 @@ public class ChatUIResource {
     
     @Inject ChatUIService chatService;
 
-    public ChatUIResource(Template chat, ChatUIService chatService) {
+    @Inject MessageService messageService;
+
+    @Inject ConversationService conversationService;
+
+    public ChatUIResource(Template chat, ChatUIService chatService, ConversationService conversationService, MessageService messageService) {
         this.chat = chat;
         this.chatService = chatService;
+        this.conversationService = conversationService;
+        this.messageService = messageService;
     }
 
     public ChatUIResource() {
@@ -45,13 +54,24 @@ public class ChatUIResource {
    
 
 
-    @GET
+    // @GET
+    // @Produces(MediaType.TEXT_HTML)
+    // public TemplateInstance get() {
+    //     List<Message> messages = Message.listAll();
+    //     //reverse the list to get the newest messages first
+    //     messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
+    //     return chat.data("messages", messages);
+    // }
+
+     @GET
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance get() {
-        List<Message> messages = Message.listAll();
+    public TemplateInstance getConversation(@QueryParam("conversationId") String conversationIdString) {
+        Long conversationId = Long.parseLong(conversationIdString);
+        List<Message> messages = messageService.getAllMessagesFromConversation(conversationId);
+        List<Conversation> conversations = conversationService.getAllConversations();
         //reverse the list to get the newest messages first
         messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
-        return chat.data("messages", messages);
+        return chat.data("messages", messages, "conversations", conversations);
     }
 
 
@@ -78,6 +98,16 @@ public class ChatUIResource {
                 eventSink.close();
             }
         );
+    }
+
+
+    @GET
+    @Path("/allMessages/{conversationId}}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Message> getAllMessages(@QueryParam("conversationId") Long conversationId) {
+        
+        List<Message> messages = messageService.getAllMessagesFromConversation(conversationId);
+        return messages;
     }
 
     

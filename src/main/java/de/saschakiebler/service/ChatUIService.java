@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import de.saschakiebler.enums.MessageRoles;
+import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
@@ -32,6 +33,13 @@ public class ChatUIService {
 
     public Message safeMessage(String messageText, MessageRoles sender) {
         Message message = new Message(sender.getRole(), messageText);
+        Message.persist(message);
+        return message;
+        
+    }
+
+    public Message safeMessageInConversation(String messageText, MessageRoles sender, Conversation conversation) {
+        Message message = new Message(sender.getRole(), messageText, conversation);
         Message.persist(message);
         return message;
         
