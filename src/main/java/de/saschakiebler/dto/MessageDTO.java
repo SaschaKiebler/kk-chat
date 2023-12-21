@@ -2,7 +2,6 @@ package de.saschakiebler.dto;
 
 import java.time.LocalDateTime;
 
-import de.saschakiebler.enums.MessageRoles;
 
 public class MessageDTO {
     private Long id;

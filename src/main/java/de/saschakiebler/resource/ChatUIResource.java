@@ -8,7 +8,6 @@ import de.saschakiebler.dto.ConversationDTO;
 import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
-import de.saschakiebler.model.Message;
 import de.saschakiebler.service.ChatUIService;
 import de.saschakiebler.service.ConversationService;
 import de.saschakiebler.service.MessageService;
@@ -110,6 +109,14 @@ public class ChatUIResource {
     @Path("/allMessages")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMessages(@QueryParam("conversationId") String conversationIdString) {
+        if (
+            Conversation.findById(Long.parseLong(conversationIdString)) == null ||
+            conversationIdString == null || 
+            conversationIdString.equals("") || 
+            conversationIdString.equals("undefined")) {
+            return Response.status(404).build();
+            
+        }
         Long conversationId = Long.parseLong(conversationIdString);
         ConversationDTO conversationDTO = messageService.getAllMessagesFromConversation(conversationId);
         return Response.ok(conversationDTO).build();
