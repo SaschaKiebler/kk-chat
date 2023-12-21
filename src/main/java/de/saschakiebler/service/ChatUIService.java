@@ -31,6 +31,9 @@ public class ChatUIService {
      @Inject
     ExecutorService executorService; 
 
+    @Inject
+    MessageService messageService;
+
     public Message safeMessage(String messageText, MessageRoles sender) {
         Message message = new Message(sender.getRole(), messageText);
         Message.persist(message);
@@ -46,7 +49,7 @@ public class ChatUIService {
     }
 
 
-    public Multi<String> streamAnswer(String messageText) {
+    public Multi<String> streamAnswer(String messageText, Long conversationId) {
         // Create the Multi emitter
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
             // Create the OpenAI Streaming model
@@ -68,7 +71,7 @@ public class ChatUIService {
                 public void onComplete(Response<AiMessage> response) {
                     // Complete the stream
                     Uni.createFrom().item(() -> {
-                        safeMessage(response.content().text(), MessageRoles.ASSISTANT);
+                        messageService.createMessage(response.content().text(), MessageRoles.ASSISTANT, Conversation.findById(conversationId));
                         return null;
                     }).runSubscriptionOn(executorService)
                     .subscribe().with(item -> emitter.complete());

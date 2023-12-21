@@ -14,6 +14,11 @@ public class ConversationService {
     @Inject
     MessageService messageService;
 
+
+    public Conversation getConversation(Long conversationId) {
+        Conversation conversation = Conversation.findById(conversationId);
+        return conversation;
+    }
    
     public Conversation createConversation() {
         Conversation conversation = new Conversation();

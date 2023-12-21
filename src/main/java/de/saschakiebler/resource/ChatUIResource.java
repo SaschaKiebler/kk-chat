@@ -53,16 +53,6 @@ public class ChatUIResource {
     }
    
 
-
-    // @GET
-    // @Produces(MediaType.TEXT_HTML)
-    // public TemplateInstance get() {
-    //     List<Message> messages = Message.listAll();
-    //     //reverse the list to get the newest messages first
-    //     messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
-    //     return chat.data("messages", messages);
-    // }
-
      @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance getConversation(@QueryParam("conversationId") String conversationIdString) {
@@ -71,7 +61,7 @@ public class ChatUIResource {
         List<Conversation> conversations = conversationService.getAllConversations();
         //reverse the list to get the newest messages first
         messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
-        return chat.data("messages", messages, "conversations", conversations);
+        return chat.data("messages", messages, "conversations", conversations, "conversationId", conversationId);
     }
 
 
@@ -80,10 +70,11 @@ public class ChatUIResource {
     @RestStreamElementType(MediaType.TEXT_PLAIN)
     public void streamAnswer(@QueryParam("messageText") String messageText, 
                              @Context SseEventSink eventSink, 
-                             @Context Sse sse){
+                             @Context Sse sse,
+                             @QueryParam("conversationId") String conversationId) {
         
-        chatService.safeMessage(messageText, MessageRoles.USER);
-        Multi<String> responseStream = chatService.streamAnswer(messageText);
+        messageService.createMessage(messageText, MessageRoles.USER, conversationService.getConversation(Long.parseLong(conversationId)));
+        Multi<String> responseStream = chatService.streamAnswer(messageText, Long.parseLong(conversationId));
 
 
 

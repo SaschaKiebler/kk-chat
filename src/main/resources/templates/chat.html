@@ -20,6 +20,7 @@
         {/if}
         </ul>
     </div>
+    <div class="conversation">
         <div class="messages">
             <div id="messages"></div>
             {#for message in messages}
@@ -38,6 +39,7 @@
             </form>
             
 
+        </div>
         </div>
     </div>
 </body>
@@ -85,7 +87,7 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
     const messageText = document.getElementById("input").value;
     addMessage(messageText, "user");
     document.getElementById("input").value = "";
-    const url = '/chat/streamAnswer?messageText=' + encodeURIComponent(messageText);
+    const url = '/chat/streamAnswer?messageText=' + encodeURIComponent(messageText)+"&conversationId="+{conversationId};
     eventSource = new EventSource(url);
 
     var messages = document.getElementById("messages");

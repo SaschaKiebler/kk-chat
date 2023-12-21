@@ -14,7 +14,7 @@ public class MessageService {
     
 
     public Message createMessage(String messageText, MessageRoles sender, Conversation conversation) {
-        Message message = new Message(sender.getRole(), messageText);
+        Message message = new Message(sender.getRole(), messageText, conversation);
         Message.persist(message);
         return message;
         

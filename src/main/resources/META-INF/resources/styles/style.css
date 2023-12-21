@@ -9,8 +9,10 @@ body {
 }
 
 .chat-container { 
-    width: 70%; 
+    width: 80%; 
     margin: auto; 
+    margin-left:0;
+    display: flex;
 }
 
 .messages { 
@@ -21,6 +23,7 @@ body {
     overflow: auto;
     display: flex;
     flex-direction: column-reverse; 
+    width: 100%;
 }
 
 .message { 
@@ -64,4 +67,9 @@ body {
     align-items: stretch;
     justify-content: center;
     width: 100%;
+}
+
+.conversation{
+    width: 100%;
+    height: 100%;
 }
