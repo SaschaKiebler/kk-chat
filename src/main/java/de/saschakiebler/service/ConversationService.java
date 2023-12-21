@@ -40,6 +40,7 @@ public class ConversationService {
 
     public List<Conversation> getAllConversations() {
         List<Conversation> conversations = Conversation.listAll();
+        conversations.sort((o1, o2) -> o2.id.compareTo(o1.id));
         return conversations;
     }
 
