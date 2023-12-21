@@ -73,3 +73,37 @@ body {
     width: 100%;
     height: 100%;
 }
+
+.conversations ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 200px;
+}
+
+.conversations ul li{
+    padding: 10px;
+    cursor: pointer;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.conversations ul li:hover{
+    background-color: #007bba;
+}
+
+.conversations ul li.active{
+    background-color: #007bba;
+    color: white;
+}
+
+.dark-mode .conversations ul li.active{
+    background-color: #007bba;
+    color: white;
+}
+
+.dark-mode .conversations ul li{
+    color: white;
+}

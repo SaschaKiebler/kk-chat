@@ -15,7 +15,7 @@
         <ul>
         {#if conversations.size != 0}
             {#for conversation in conversations}
-                <li><a href="/chat?conversationId={conversation.id}">{conversation.name}</a></li>
+                <a href="/chat?conversationId={conversation.id}"><li>{conversation.name}</li></a>
             {/for}
         {/if}
         </ul>
@@ -60,6 +60,8 @@
             document.body.classList.remove("dark-mode");
             document.getElementById("dark-mode").checked = false;
         }
+
+        linkActive();
     }
 
     function toggleDarkMode() {
@@ -146,6 +148,16 @@ function addMessage(messageText, sender) {
         message.classList.add("message");
         message.innerHTML = message.innerHTML  + messageText;
         messages.appendChild(message);
+}
+
+
+function linkActive(){
+    var links = document.getElementsByTagName("a");
+    for (var i = 0; i < links.length; i++) {
+        if(links[i].href == window.location.href){
+            links[i].firstChild.classList.add("active");
+        }
+    }
 }
 
 </script>
