@@ -22,6 +22,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
 
@@ -56,12 +57,22 @@ public class ChatUIResource {
      @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance getConversation(@QueryParam("conversationId") String conversationIdString) {
-        Long conversationId = Long.parseLong(conversationIdString);
-        List<Message> messages = messageService.getAllMessagesFromConversation(conversationId);
+        Conversation conversation;
+        if (conversationIdString == null || conversationIdString.equals("") || conversationIdString.equals("undefined")) {
+            conversation = conversationService.createConversation();
+        }
+        else {
+            Long conversationId = Long.parseLong(conversationIdString);
+            conversation = conversationService.getConversation(conversationId);
+            if (conversation == null) {
+                conversation = conversationService.createConversation();
+            }
+        }
+        List<Message> messages = messageService.getAllMessagesFromConversation(conversation.id);
         List<Conversation> conversations = conversationService.getAllConversations();
         //reverse the list to get the newest messages first
         messages.sort((o1, o2) -> o2.id.compareTo(o1.id));
-        return chat.data("messages", messages, "conversations", conversations, "conversationId", conversationId);
+        return chat.data("messages", messages, "conversations", conversations, "conversationId", conversation.id);
     }
 
 
@@ -93,14 +104,22 @@ public class ChatUIResource {
 
 
     @GET
-    @Path("/allMessages/{conversationId}}")
+    @Path("/allMessages/")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Message> getAllMessages(@QueryParam("conversationId") Long conversationId) {
-        
+    public List<Message> getAllMessages(@QueryParam("conversationId") String conversationIdString) {
+        Long conversationId = Long.parseLong(conversationIdString);
         List<Message> messages = messageService.getAllMessagesFromConversation(conversationId);
         return messages;
     }
 
+
+    @GET
+    @Path("/createConversation")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createConversation() {
+        Conversation conversation = conversationService.createConversation();
+        return Response.ok(conversation).build();
+    }
     
 
 }

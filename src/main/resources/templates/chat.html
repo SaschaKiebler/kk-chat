@@ -13,6 +13,7 @@
     <div class="chat-container">
     <div class="conversations">
         <ul>
+        <li onclick="newChat()">Neuer Chat</li>
         {#if conversations.size != 0}
             {#for conversation in conversations}
                 <a href="/chat?conversationId={conversation.id}"><li>{conversation.name}</li></a>
@@ -51,6 +52,9 @@
     }
 
     onload = function() {
+        if(!window.location.href.includes("conversationId")){
+            window.location.href = "/chat?conversationId=" + {conversationId}
+        }
         var darkMode = localStorage.getItem("dark-mode");
         if(darkMode === "enabled"){
             document.body.classList.add("dark-mode");
@@ -158,7 +162,27 @@ function linkActive(){
             links[i].firstChild.classList.add("active");
         }
     }
+
+
 }
+
+function newChat(){
+    fetch('/chat/createConversation', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json()).then(data => {
+
+        console.log(data);
+
+        window.location.href = "/chat?conversationId="+data["id"];
+    })
+    }
+
+
+
 
 </script>
 </html>
