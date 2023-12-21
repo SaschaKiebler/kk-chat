@@ -45,6 +45,10 @@ public class Conversation extends PanacheEntity {
         this.messages.remove(message);
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     public List<Message> getMessages() {
         return this.messages;
     }

@@ -1,7 +1,10 @@
 package de.saschakiebler.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import de.saschakiebler.dto.ConversationDTO;
+import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
@@ -37,10 +40,37 @@ public class MessageService {
         return messageDeleted;
     }
 
-    public List<Message> getAllMessagesFromConversation(Long conversationId) {
+    // public List<Message> getAllMessagesFromConversation(Long conversationId) {
+    //     Conversation conversation = Conversation.findById(conversationId);
+    //     List<Message> messages = Message.list("conversation", conversation);
+    //     return messages;
+    // }
+
+     public ConversationDTO getAllMessagesFromConversation(Long conversationId) {
         Conversation conversation = Conversation.findById(conversationId);
-        List<Message> messages = Message.list("conversation", conversation);
-        return messages;
+
+        // Convert to DTO
+        ConversationDTO conversationDTO = new ConversationDTO();
+        conversationDTO.setId(conversation.getId());
+        
+        List<MessageDTO> messageDTOs = conversation.getMessages()
+            .stream()
+            .map(this::convertToMessageDTO)
+            .collect(Collectors.toList());
+        
+        conversationDTO.setMessages(messageDTOs);
+
+        return conversationDTO;
+    }
+
+    private MessageDTO convertToMessageDTO(Message message) {
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setId(message.getId());
+        messageDTO.setText(message.getText());
+        messageDTO.setSender(message.getSender());
+        messageDTO.setTimestamp(message.getTimestamp());
+        
+        return messageDTO;
     }
 
 

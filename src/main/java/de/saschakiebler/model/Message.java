@@ -74,6 +74,15 @@ public class Message extends PanacheEntity {
     }
 
     /**
+     * Get the id of the message.
+     * 
+     * @return The id of the message.
+     */
+    public Long getId() {
+        return this.id;
+    }
+
+    /**
      * Get the sender of the message.
      * 
      * @return The sender of the message.
