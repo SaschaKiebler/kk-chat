@@ -40,16 +40,10 @@ public class MessageService {
         return messageDeleted;
     }
 
-    // public List<Message> getAllMessagesFromConversation(Long conversationId) {
-    //     Conversation conversation = Conversation.findById(conversationId);
-    //     List<Message> messages = Message.list("conversation", conversation);
-    //     return messages;
-    // }
 
      public ConversationDTO getAllMessagesFromConversation(Long conversationId) {
         Conversation conversation = Conversation.findById(conversationId);
 
-        // Convert to DTO
         ConversationDTO conversationDTO = new ConversationDTO();
         conversationDTO.setId(conversation.getId());
         

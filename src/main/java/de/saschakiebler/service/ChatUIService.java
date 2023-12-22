@@ -50,26 +50,21 @@ public class ChatUIService {
 
 
     public Multi<String> streamAnswer(String messageText, Long conversationId) {
-        // Create the Multi emitter
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
-            // Create the OpenAI Streaming model
             StreamingChatLanguageModel model = OpenAiStreamingChatModel.withApiKey(System.getenv("OPENAI_API_KEY"));
             
             List<ChatMessage> messages = asList(
                     userMessage(messageText)
             );
 
-            // Start generating the response and stream each token
             model.generate(messages, new StreamingResponseHandler<AiMessage>() {
                 @Override
                 public void onNext(String token) {
-                    // Emit each token to the Multi stream
                     emitter.emit(token);
                 }
 
                 @Override
                 public void onComplete(Response<AiMessage> response) {
-                    // Complete the stream
                     Uni.createFrom().item(() -> {
                         messageService.createMessage(response.content().text(), MessageRoles.ASSISTANT, Conversation.findById(conversationId));
                         return null;
@@ -79,14 +74,12 @@ public class ChatUIService {
 
                 @Override
                 public void onError(Throwable error) {
-                    // Pass the error to the stream
                     emitter.fail(error);
                 }
             });
         });
 
 
-        // Return the Multi stream
         return responseStream;
     }
     

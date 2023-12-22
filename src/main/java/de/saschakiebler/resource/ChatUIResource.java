@@ -75,7 +75,6 @@ public class ChatUIResource {
         
         ConversationDTO conversationDTO = messageService.getAllMessagesFromConversation(conversation.id);
         List<Conversation> conversations = conversationService.getAllConversations();
-        //reverse the list to get the newest messages first
         List<MessageDTO> messages = conversationDTO.getMessages();
         messages.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
         return chat.data("messages", messages, "conversations", conversations, "conversationId", conversation.id);
