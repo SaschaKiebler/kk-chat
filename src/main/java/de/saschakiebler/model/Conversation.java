@@ -2,7 +2,7 @@ package de.saschakiebler.model;
 
 
 import java.util.List;
-
+import java.util.Objects;
 import java.time.LocalDateTime;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -30,11 +30,13 @@ public class Conversation extends PanacheEntity {
     public Conversation() {
         this.timestamp = LocalDateTime.now();
         this.name = "new Conversation";
+        this.messages = List.of();
     }
 
     public Conversation(String name) {
         this.name = name;
         this.timestamp = LocalDateTime.now();
+        this.messages = List.of();
     }
 
     public void addMessage(Message message) {
@@ -67,6 +69,22 @@ public class Conversation extends PanacheEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Conversation)) {
+            return false;
+        }
+        Conversation conversation = (Conversation) o;
+        return id == conversation.id && messages.equals(conversation.messages) && timestamp.equals(conversation.timestamp) && name.equals(conversation.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, messages, timestamp, name);
     }
     
 

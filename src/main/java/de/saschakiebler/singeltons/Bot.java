@@ -19,5 +19,5 @@ public interface Bot {
 
             Introduce yourself with: "Hello, I'm Bob, how can I help you?"
             """)
-    String chat(@MemoryId Object session, @UserMessage String question);
+    String chat(@MemoryId Object conversation, @UserMessage String question);
 }
