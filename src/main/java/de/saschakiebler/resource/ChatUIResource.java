@@ -1,5 +1,6 @@
 package de.saschakiebler.resource;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.resteasy.reactive.RestStreamElementType;
@@ -61,6 +62,9 @@ public class ChatUIResource {
         Conversation conversation;
         if (conversationIdString == null || conversationIdString.equals("") || conversationIdString.equals("undefined")) {
             conversation = conversationService.createConversation();
+             List<MessageDTO> messages = Collections.emptyList();
+            List<Conversation> conversations = conversationService.getAllConversations();
+            return chat.data("messages", messages, "conversations", conversations, "conversationId", conversation.id);
         }
         else {
             Long conversationId = Long.parseLong(conversationIdString);
@@ -68,13 +72,14 @@ public class ChatUIResource {
             if (conversation == null) {
                 conversation = conversationService.createConversation();
             }
-        }
+        
         ConversationDTO conversationDTO = messageService.getAllMessagesFromConversation(conversation.id);
         List<Conversation> conversations = conversationService.getAllConversations();
         //reverse the list to get the newest messages first
         List<MessageDTO> messages = conversationDTO.getMessages();
         messages.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
         return chat.data("messages", messages, "conversations", conversations, "conversationId", conversation.id);
+        }
     }
 
 
