@@ -38,6 +38,8 @@ import jakarta.ws.rs.sse.SseEventSink;
 @Transactional
 public class ChatUIResource {
     @Inject Template chat;
+
+    @Inject Template chatWebsocket;
     
     @Inject ChatUIService chatService;
 
@@ -136,6 +138,16 @@ public class ChatUIResource {
         return Response.ok(conversation).build();
     }
     
+
+
+
+    @GET
+    @Path("/websocketUI")
+    @Produces(MediaType.TEXT_HTML)
+    public TemplateInstance getWebsocketUI() {
+        return chatWebsocket.data("conversationId", conversationService.createConversation().id);
+    }
+
 
 }
 

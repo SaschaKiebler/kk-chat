@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <style>
+        :root {
+            --main-bg-color: hsla(0, 0%, 100%, 0.21);
+            --main-highlight-text-color: #e13245;
+        }
+
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            font-family: 'Red Hat Text', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: var(--lumo-body-text-color);
+            background: var(--main-bg-color);
+        }
+
+        #chat-bot {
+            --chatbot-avatar-bg-color: var(--main-highlight-text-color);
+            --chatbot-avatar-margin: 10%;
+            --chatbot-header-bg-color: var(--main-highlight-text-color);;
+            --chatbot-header-title-color: #FFFFFF;
+            --chatbot-body-bg-color: var(--main-bg-color);
+            --chatbot-send-button-color: var(--main-highlight-text-color);;
+        }
+
+        .middle {
+            margin-top: 2em;
+            overflow: hidden;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+        }
+
+    </style>
+    </head>
+<body>
+<div class="middle">
+    <div id="demo-chat">
+        <button id="chat-bot">button</button>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+
+onload = function connectedCallback() {
+        const chatBot = document.getElementById("chat-bot");
+
+        const socket = new WebSocket("ws://" + window.location.host + "/chatbot");
+        socket.onmessage = function (event) {
+            chatBot.sendMessage(event.data, {
+                right: false,
+                sender: "User"
+            });
+        }
+
+        chatBot.addEventListener("sent", function (e) {
+            if (e.detail.message.right === true) {
+                // User message
+                socket.send(e.detail.message.message);
+                chatBot.sendMessage("", {
+                    right: false,
+                    sender: "User",
+                    loading: true
+                });
+            }
+        });
+    }
+</script>
