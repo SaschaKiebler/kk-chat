@@ -114,7 +114,7 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
         console.log('EventSource error:', error);
         // Because i get an error after every message is finished, 
         //i reload the page to format the chat correctly. This has to be fixed.!!!!
-        location.reload();
+        loadMessages();
         eventSource.close();
     };
 
@@ -122,7 +122,7 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
     eventSource.onclose = function() {
         console.log('EventSource closed');
         //reload the page to format the chat correctly. This has to be fixed.!!!!
-        location.reload();
+       loadMessages();
          
     };
 };
@@ -141,7 +141,7 @@ function addMessage(messageText, sender) {
         var message = document.createElement("div");
         var senderSpan = document.createElement("span");
         senderSpan.classList.add("sender");
-        if(sender == "user"){
+        if(sender == "user" || sender == "User"){
             senderSpan.innerHTML = "User: ";
         }
         else{
@@ -178,6 +178,32 @@ function newChat(){
 
         window.location.href = "/chat?conversationId="+data["id"];
     })
+    }
+
+    function loadMessages(){
+        
+
+        fetch('/chat/allMessages?conversationId='+{conversationId}, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json()).then(data => {
+        console.log(data);
+        clearMessages();
+        data.messages.forEach(message => {
+            
+            addMessage(message["text"], message["sender"]);
+        });
+    })
+    }
+
+    function clearMessages(){
+            var msDiv = document.getElementsByClassName("messages")[0];
+            msDiv.innerHTML = "";
+            var msID = document.createElement("div");
+            msID.id = "messages";
+            msDiv.appendChild(msID);
     }
 
 
