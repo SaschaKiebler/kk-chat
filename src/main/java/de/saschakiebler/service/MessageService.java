@@ -1,9 +1,5 @@
 package de.saschakiebler.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import de.saschakiebler.dto.ConversationDTO;
 import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
