@@ -44,5 +44,20 @@ public class ConversationService {
         return conversations;
     }
 
+    public Conversation getConversation(String conversationIdString) {
+        Conversation conversation;
+        if (conversationIdString == null || conversationIdString.equals("") || conversationIdString.equals("undefined")) {
+            conversation = createConversation();
+             
+        }
+        else {
+            Long conversationId = Long.parseLong(conversationIdString);
+            conversation = getConversation(conversationId);
+            if (conversation == null) {
+                conversation = createConversation();
+            }
+    }
+    return conversation;
+    }
 
 }

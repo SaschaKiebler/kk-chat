@@ -30,6 +30,7 @@ public class Conversation extends PanacheEntity {
     public Conversation() {
         this.timestamp = LocalDateTime.now();
         this.name = "new Conversation";
+        this.messages = List.of();
     }
 
     public Conversation(String name) {

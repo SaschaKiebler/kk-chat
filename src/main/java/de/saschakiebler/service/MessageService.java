@@ -46,13 +46,18 @@ public class MessageService {
 
         ConversationDTO conversationDTO = new ConversationDTO();
         conversationDTO.setId(conversation.getId());
-        
+
+        if(conversation.getMessages() == null) {
+            conversationDTO.setMessages(List.of());
+        }
+        else{
         List<MessageDTO> messageDTOs = conversation.getMessages()
             .stream()
             .map(this::convertToMessageDTO)
             .collect(Collectors.toList());
         
         conversationDTO.setMessages(messageDTOs);
+        }
 
         return conversationDTO;
     }
