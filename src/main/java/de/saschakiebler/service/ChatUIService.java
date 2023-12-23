@@ -34,12 +34,6 @@ public class ChatUIService {
     @Inject
     MessageService messageService;
 
-    public Message safeMessage(String messageText, MessageRoles sender) {
-        Message message = new Message(sender.getRole(), messageText);
-        Message.persist(message);
-        return message;
-        
-    }
 
     public Message safeMessageInConversation(String messageText, MessageRoles sender, Conversation conversation) {
         Message message = new Message(sender.getRole(), messageText, conversation);
