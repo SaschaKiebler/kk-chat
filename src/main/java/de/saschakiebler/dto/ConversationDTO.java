@@ -7,14 +7,16 @@ public class ConversationDTO {
     private Long id;
     private List<MessageDTO> messages;
     private LocalDateTime timestamp;
+    private String name;
 
     public ConversationDTO() {
     }
 
-    public ConversationDTO(Long id, List<MessageDTO> messages, LocalDateTime timestamp) {
+    public ConversationDTO(Long id, List<MessageDTO> messages, LocalDateTime timestamp,String name) {
         this.id = id;
         this.messages = messages;
         this.timestamp = timestamp;
+        this.name = name;
     }
 
     public ConversationDTO(Long id, List<MessageDTO> messages) {
@@ -34,6 +36,10 @@ public class ConversationDTO {
         return this.timestamp;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -46,6 +52,9 @@ public class ConversationDTO {
         this.timestamp = timestamp;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
 }

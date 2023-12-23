@@ -41,28 +41,9 @@ public class MessageService {
     }
 
 
-     public ConversationDTO getAllMessagesFromConversation(Long conversationId) {
-        Conversation conversation = Conversation.findById(conversationId);
+    
 
-        ConversationDTO conversationDTO = new ConversationDTO();
-        conversationDTO.setId(conversation.getId());
-
-        if(conversation.getMessages() == null) {
-            conversationDTO.setMessages(List.of());
-        }
-        else{
-        List<MessageDTO> messageDTOs = conversation.getMessages()
-            .stream()
-            .map(this::convertToMessageDTO)
-            .collect(Collectors.toList());
-        
-        conversationDTO.setMessages(messageDTOs);
-        }
-
-        return conversationDTO;
-    }
-
-    private MessageDTO convertToMessageDTO(Message message) {
+    public MessageDTO convertToMessageDTO(Message message) {
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setId(message.getId());
         messageDTO.setText(message.getText());

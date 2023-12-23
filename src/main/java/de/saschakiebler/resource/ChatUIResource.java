@@ -59,7 +59,7 @@ public class ChatUIResource {
     public TemplateInstance getConversation(@QueryParam("conversationId") String conversationIdString) {
         Conversation conversation = conversationService.getConversation(conversationIdString);
         
-        ConversationDTO conversationDTO = messageService.getAllMessagesFromConversation(conversation.id);
+        ConversationDTO conversationDTO = conversationService.getConversationDTO(conversation.id);
         List<Conversation> conversations = conversationService.getAllConversations();
 
         List<MessageDTO> messages = conversationDTO.getMessages();
@@ -109,7 +109,7 @@ public class ChatUIResource {
             
         }
         Long conversationId = Long.parseLong(conversationIdString);
-        ConversationDTO conversationDTO = messageService.getAllMessagesFromConversation(conversationId);
+        ConversationDTO conversationDTO = conversationService.getConversationDTO(conversationId);
         return Response.ok(conversationDTO).build();
     }
 

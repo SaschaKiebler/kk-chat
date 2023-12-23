@@ -1,7 +1,10 @@
 package de.saschakiebler.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import de.saschakiebler.dto.ConversationDTO;
+import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.model.Conversation;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,6 +22,8 @@ public class ConversationService {
         Conversation conversation = Conversation.findById(conversationId);
         return conversation;
     }
+
+    
    
     public Conversation createConversation() {
         Conversation conversation = new Conversation();
@@ -26,6 +31,8 @@ public class ConversationService {
         return conversation;
         
     }
+
+
 
     public Conversation updateConversation(Conversation conversation, String name) {
         Conversation.update(name, conversation);
@@ -38,11 +45,15 @@ public class ConversationService {
         }
     }
 
+
+
     public List<Conversation> getAllConversations() {
         List<Conversation> conversations = Conversation.listAll();
         conversations.sort((o1, o2) -> o2.id.compareTo(o1.id));
         return conversations;
     }
+
+
 
     public Conversation getConversation(String conversationIdString) {
         Conversation conversation;
@@ -58,6 +69,38 @@ public class ConversationService {
             }
     }
     return conversation;
+    }
+
+
+
+     public ConversationDTO getConversationDTO(Long conversationId) {
+        Conversation conversation = Conversation.findById(conversationId);
+
+        ConversationDTO conversationDTO = convertToConversationDTO(conversation);
+
+        return conversationDTO;
+    }
+
+
+
+    public ConversationDTO convertToConversationDTO(Conversation conversation) {
+        ConversationDTO conversationDTO = new ConversationDTO();
+        conversationDTO.setId(conversation.getId());
+
+        if(conversation.getMessages() == null) {
+            conversationDTO.setMessages(List.of());
+        }
+        else{
+        List<MessageDTO> messageDTOs = conversation.getMessages()
+            .stream()
+            .map(messageService::convertToMessageDTO)
+            .collect(Collectors.toList());
+        
+        conversationDTO.setMessages(messageDTOs);
+        }
+
+        conversationDTO.setName(conversation.getName());
+        return conversationDTO;
     }
 
 }
