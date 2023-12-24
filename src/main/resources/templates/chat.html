@@ -101,16 +101,13 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
 
     eventSource.onerror = function(error) {
         console.log('EventSource error:', error);
-        // Because i get an error after every message is finished, 
-        //i reload the page to format the chat correctly. This has to be fixed.!!!!
+        //i get an error after every message is finished
         loadMessages();
         eventSource.close();
     };
 
-    // reload the chat after the stream is closed
     eventSource.onclose = function() {
         console.log('EventSource closed');
-        //reload the page to format the chat correctly. This has to be fixed.!!!!
        loadMessages();
          
     };
