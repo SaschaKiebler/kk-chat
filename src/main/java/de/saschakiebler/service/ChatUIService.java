@@ -45,8 +45,12 @@ public class ChatUIService {
 
     public Multi<String> streamAnswer(String messageText, Long conversationId) {
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
-            StreamingChatLanguageModel model = OpenAiStreamingChatModel.withApiKey(System.getenv("OPENAI_API_KEY"));
-            
+            StreamingChatLanguageModel model = 
+            OpenAiStreamingChatModel.builder()
+                                    .apiKey(System.getenv("OPENAI_API_KEY"))
+                                    .modelName("gpt-4-1106-preview")
+                                    .build();
+
             List<ChatMessage> messages = asList(
                     userMessage(messageText)
             );
