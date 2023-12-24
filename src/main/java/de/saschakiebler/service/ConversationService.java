@@ -95,6 +95,8 @@ public class ConversationService {
             .stream()
             .map(messageService::convertToMessageDTO)
             .collect(Collectors.toList());
+
+        messageDTOs.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
         
         conversationDTO.setMessages(messageDTOs);
         }

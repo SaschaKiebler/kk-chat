@@ -21,13 +21,9 @@
         </ul>
     </div>
     <div class="conversation">
-        <div class="messages">
-            <div id="messages"></div>
+        <div id="messages">
             {#for message in messages}
-                <div class="message">
-                    <span class="sender">{message.sender}:</span>
-                    <span>{message.text}</span>
-                </div>
+                <div class="message"><span class="sender">{message.sender}: </span>{message.text}</div>
             {/for}
             
         </div>
@@ -90,24 +86,17 @@ document.getElementById('chat-form').onsubmit = function readData(event) {
     }
 
     const messageText = document.getElementById("input").value;
-    addMessage(messageText, "user");
+    addMessageBefore(messageText, "user");
     document.getElementById("input").value = "";
     const url = '/chat/streamAnswer?messageText=' + encodeURIComponent(messageText)+"&conversationId="+{conversationId};
     eventSource = new EventSource(url);
 
-    var messages = document.getElementById("messages");
-        var message = document.createElement("div");
-        var sender = document.createElement("span");
-        sender.classList.add("sender");
-        sender.innerHTML = "Assistant: ";
-        message.appendChild(sender);
+    var message = addMessageBefore("...", "Assistant");
 
     eventSource.onmessage = function(event) {
         console.log(event.data);
         
-        message.classList.add("message");
         message.innerHTML = message.innerHTML + " " + event.data;
-        messages.appendChild(message);
     };
 
     eventSource.onerror = function(error) {
@@ -151,6 +140,27 @@ function addMessage(messageText, sender) {
         message.classList.add("message");
         message.innerHTML = message.innerHTML  + messageText;
         messages.appendChild(message);
+
+        return message;
+}
+
+function addMessageBefore(messageText, sender) {
+    var messages = document.getElementById("messages");
+        var message = document.createElement("div");
+        var senderSpan = document.createElement("span");
+        senderSpan.classList.add("sender");
+        if(sender == "user" || sender == "User"){
+            senderSpan.innerHTML = "User: ";
+        }
+        else{
+            senderSpan.innerHTML = "Assistant: ";
+    }
+        message.appendChild(senderSpan);
+        message.classList.add("message");
+        message.innerHTML = message.innerHTML  + messageText;
+        messages.insertBefore(message, messages.firstChild);
+
+        return message;
 }
 
 
@@ -199,11 +209,8 @@ function newChat(){
     }
 
     function clearMessages(){
-            var msDiv = document.getElementsByClassName("messages")[0];
+            var msDiv = document.getElementById("messages");
             msDiv.innerHTML = "";
-            var msID = document.createElement("div");
-            msID.id = "messages";
-            msDiv.appendChild(msID);
     }
 
 

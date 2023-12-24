@@ -15,11 +15,10 @@ body {
     display: flex;
 }
 
-.messages { 
+#messages { 
     height: 80vh; 
     overflow-y: scroll; 
     border-left: 1px solid #ccc; 
-    padding: 10px;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse; 
@@ -29,6 +28,7 @@ body {
 .message { 
     margin-bottom: 10px; 
     white-space: pre-line;
+    padding: 10px;
 }
 
 .sender { 
