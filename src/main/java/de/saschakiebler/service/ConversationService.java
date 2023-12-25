@@ -105,4 +105,12 @@ public class ConversationService {
         return conversationDTO;
     }
 
+
+    public List<MessageDTO> getChatMemory(Long conversationId) {
+        Conversation conversation = Conversation.findById(conversationId);
+        List<MessageDTO> messageDTOs = convertToConversationDTO(conversation).getMessages();
+        messageDTOs.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
+        return messageDTOs;
+    }
+
 }

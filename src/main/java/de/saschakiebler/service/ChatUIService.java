@@ -2,15 +2,20 @@ package de.saschakiebler.service;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
+import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
+import dev.langchain4j.model.openai.OpenAiTokenizer;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,6 +26,8 @@ import jakarta.transaction.Transactional;
 import dev.langchain4j.model.output.Response;
 
 import static dev.langchain4j.data.message.UserMessage.userMessage;
+import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
+import static dev.langchain4j.data.message.AiMessage.aiMessage;
 import static java.util.Arrays.asList;
 
 
@@ -34,6 +41,9 @@ public class ChatUIService {
     @Inject
     MessageService messageService;
 
+    @Inject
+    ConversationService conversationService;
+
 
     public Message safeMessageInConversation(String messageText, MessageRoles sender, Conversation conversation) {
         Message message = new Message(sender.getRole(), messageText, conversation);
@@ -44,6 +54,18 @@ public class ChatUIService {
 
 
     public Multi<String> streamAnswer(String messageText, Long conversationId) {
+                    List<MessageDTO> memory = conversationService.getChatMemory(conversationId);
+                    ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(4069,new OpenAiTokenizer("gpt-4-1106-preview"));
+
+                    for (MessageDTO message : memory) {
+                        if(message.getSender().equals(MessageRoles.ASSISTANT.getRole())){
+                            chatMemory.add(aiMessage(message.getText()));
+                        }else{
+                        chatMemory.add(userMessage(message.getText()));
+                        }
+                    }
+                    chatMemory.add(userMessage(messageText));
+
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
             StreamingChatLanguageModel model = 
             OpenAiStreamingChatModel.builder()
@@ -51,11 +73,12 @@ public class ChatUIService {
                                     .modelName("gpt-4-1106-preview")
                                     .build();
 
-            List<ChatMessage> messages = asList(
-                    userMessage(messageText)
-            );
 
-            model.generate(messages, new StreamingResponseHandler<AiMessage>() {
+
+            System.out.println("ChatMemory: " + chatMemory.messages().stream().map(ChatMessage::text).collect(Collectors.joining("\n")));
+
+
+            model.generate(chatMemory.messages(), new StreamingResponseHandler<AiMessage>() {
                 @Override
                 public void onNext(String token) {
                     emitter.emit(token);
