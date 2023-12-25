@@ -26,9 +26,7 @@ import jakarta.transaction.Transactional;
 import dev.langchain4j.model.output.Response;
 
 import static dev.langchain4j.data.message.UserMessage.userMessage;
-import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 import static dev.langchain4j.data.message.AiMessage.aiMessage;
-import static java.util.Arrays.asList;
 
 
 @Transactional
@@ -54,23 +52,25 @@ public class ChatUIService {
 
 
     public Multi<String> streamAnswer(String messageText, Long conversationId) {
-                    List<MessageDTO> memory = conversationService.getChatMemory(conversationId);
-                    ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(4069,new OpenAiTokenizer("gpt-4-1106-preview"));
 
-                    for (MessageDTO message : memory) {
-                        if(message.getSender().equals(MessageRoles.ASSISTANT.getRole())){
-                            chatMemory.add(aiMessage(message.getText()));
-                        }else{
-                        chatMemory.add(userMessage(message.getText()));
-                        }
-                    }
-                    chatMemory.add(userMessage(messageText));
+        String modelName = "gpt-4-1106-preview";
+        List<MessageDTO> memory = conversationService.getChatMemory(conversationId);
+        ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(4069,new OpenAiTokenizer(modelName));
+
+        for (MessageDTO message : memory) {
+            if(message.getSender().equals(MessageRoles.ASSISTANT.getRole())){
+                chatMemory.add(aiMessage(message.getText()));
+            }else{
+            chatMemory.add(userMessage(message.getText()));
+            }
+        }
+        chatMemory.add(userMessage(messageText));
 
         Multi<String> responseStream = Multi.createFrom().emitter(emitter -> {
             StreamingChatLanguageModel model = 
             OpenAiStreamingChatModel.builder()
                                     .apiKey(System.getenv("OPENAI_API_KEY"))
-                                    .modelName("gpt-4-1106-preview")
+                                    .modelName(modelName)
                                     .build();
 
 

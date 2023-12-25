@@ -4,12 +4,12 @@
 }
 
 body { 
-    font-family: Arial, sans-serif; 
+    font-family: 'Poppins', sans-serif;
     background-color: #fff;
 }
 
 .chat-container { 
-    width: 80%; 
+    width: 100%; 
     margin: auto; 
     margin-left:0;
     display: flex;
@@ -18,7 +18,6 @@ body {
 #messages { 
     height: 80vh; 
     overflow-y: scroll; 
-    border-left: 1px solid #ccc; 
     overflow: auto;
     display: flex;
     flex-direction: column-reverse; 
@@ -72,12 +71,17 @@ body {
 
 .conversation{
     width: 100%;
+    margin-left: 10vw;
+    margin-right: 10vw;
 }
 
 .conversations{
     height: 90vh;
+    width: 15vw;
+    min-width: 150px;
     overflow-y: scroll; 
     overflow-x: hidden;
+    border-right: #ccc 1px solid;
 }
 
 .conversations ul{
@@ -92,7 +96,7 @@ body {
     cursor: pointer;
     color: #000;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     margin-left: 10px;
     text-wrap: wrap;
     white-space: nowrap;
