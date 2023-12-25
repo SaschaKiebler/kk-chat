@@ -77,7 +77,8 @@ body {
 
 .conversations{
     height: 90vh;
-    width: 15vw;
+    width: 20vw;
+    max-width: fit-content;
     min-width: 150px;
     overflow-y: scroll; 
     overflow-x: hidden;
