@@ -1,11 +1,17 @@
 package de.saschakiebler.service;
 
+import static dev.langchain4j.data.message.UserMessage.userMessage;
+import static dev.langchain4j.data.message.AiMessage.aiMessage;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import de.saschakiebler.dto.ConversationDTO;
 import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.model.Conversation;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -113,4 +119,26 @@ public class ConversationService {
         return messageDTOs;
     }
 
+    public String generateConversationName(List<MessageDTO> messagesInput) {
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                                    .apiKey(System.getenv("OPENAI_API_KEY"))
+                                    .modelName("gpt-3.5-turbo-1106")
+                                    .build();
+
+        List<ChatMessage> messages = List.of();
+
+        messagesInput.forEach(message -> {
+            if(message.getSender().equals("Assistant")){
+                messages.add(aiMessage(message.getText()));
+            }else{
+            messages.add(userMessage(message.getText()));
+            }
+        });
+        
+        messages.add(userMessage("give me a title for this conversation without any other text"));
+
+        String conversationName = model.generate(messages).content().text();
+
+        return conversationName;
+    }
 }

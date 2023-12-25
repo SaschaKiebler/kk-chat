@@ -4,7 +4,6 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestStreamElementType;
 
 import de.saschakiebler.dto.ConversationDTO;
-import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
 import de.saschakiebler.service.ChatUIService;
@@ -59,12 +58,9 @@ public class ChatUIResource {
     public TemplateInstance getConversation(@QueryParam("conversationId") String conversationIdString) {
         Conversation conversation = conversationService.getConversation(conversationIdString);
         
-        ConversationDTO conversationDTO = conversationService.getConversationDTO(conversation.id);
         List<Conversation> conversations = conversationService.getAllConversations();
 
-        List<MessageDTO> messages = conversationDTO.getMessages();
-        messages.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
-        return chat.data("messages", messages, "conversations", conversations, "conversationId", conversation.id);
+        return chat.data( "conversations", conversations, "conversationId", conversation.id);
         
     }
 
