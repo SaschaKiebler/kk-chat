@@ -41,7 +41,7 @@ public class ConversationService {
 
 
     public Conversation updateConversation(Conversation conversation, String name) {
-        Conversation.update(name, conversation);
+        Conversation.update("name = ?1 where id = ?2", name, conversation.id);
         Conversation returnConversation = Conversation.findById(conversation.id);
         if (returnConversation == null) {
             throw new IllegalArgumentException("Conversation not found");
@@ -119,25 +119,29 @@ public class ConversationService {
         return messageDTOs;
     }
 
-    public String generateConversationName(List<MessageDTO> messagesInput) {
+    public String generateConversationName(Long conversationId) {
         ChatLanguageModel model = OpenAiChatModel.builder()
                                     .apiKey(System.getenv("OPENAI_API_KEY"))
                                     .modelName("gpt-3.5-turbo-1106")
                                     .build();
 
-        List<ChatMessage> messages = List.of();
-
-        messagesInput.forEach(message -> {
-            if(message.getSender().equals("Assistant")){
-                messages.add(aiMessage(message.getText()));
-            }else{
-            messages.add(userMessage(message.getText()));
-            }
-        });
+        List<ChatMessage> messages = getChatMemory(conversationId)
+                                        .stream()
+                                        .map(message -> {
+                                            if(message.getSender().equals("assistant")){
+                                                return aiMessage(message.getText());
+                                            }else{
+                                                return userMessage(message.getText());
+                                            }
+                                        })
+                                        .collect(Collectors.toList());
         
         messages.add(userMessage("give me a title for this conversation without any other text"));
 
         String conversationName = model.generate(messages).content().text();
+
+        Conversation conversation = getConversation(String.valueOf(conversationId));
+        updateConversation(conversation, conversationName);
 
         return conversationName;
     }

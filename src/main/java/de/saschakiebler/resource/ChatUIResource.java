@@ -118,6 +118,23 @@ public class ChatUIResource {
         return Response.ok(conversation).build();
     }
     
+    @GET
+    @Path("/generateConversationName")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generateConversationName(@QueryParam("conversationId") String conversationIdString) {
+        if (
+            Conversation.findById(Long.parseLong(conversationIdString)) == null ||
+            conversationIdString == null || 
+            conversationIdString.equals("") || 
+            conversationIdString.equals("undefined")) {
+            return Response.status(404).build();
+            
+        }
+        Long conversationId = Long.parseLong(conversationIdString);
+        String conversationName = conversationService.generateConversationName(conversationId);
+        return Response.ok(conversationName).build();
+    }
+    
 
 }
 
