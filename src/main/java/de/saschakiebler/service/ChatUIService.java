@@ -55,7 +55,7 @@ public class ChatUIService {
 
         String modelName = "gpt-4-1106-preview";
         List<MessageDTO> memory = conversationService.getChatMemory(conversationId);
-        ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(4069,new OpenAiTokenizer(modelName));
+        ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(1000,new OpenAiTokenizer(modelName));
 
         for (MessageDTO message : memory) {
             if(message.getSender().equals(MessageRoles.ASSISTANT.getRole())){
