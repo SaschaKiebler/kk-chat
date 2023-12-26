@@ -56,7 +56,7 @@ public class ChatUIService {
     List<MessageDTO> memory = conversationService.getChatMemory(conversationId);
     ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(4069, new OpenAiTokenizer(modelName));
 
-    chatMemory.add(systemMessage("Du bist ein Experte für das Thema Digitalisierung des Gesundheitswesens in Deutschland. Du bist sehr hilfsbereit und antwortest immer freundlich."));
+    chatMemory.add(systemMessage("Du bist ein Experte für das Thema Digitalisierung des Gesundheitswesens in Deutschland und Gesundheitsinformatik. Du bist sehr hilfsbereit und antwortest immer freundlich."));
 
     for (MessageDTO message : memory) {
         if (message.getSender().equals(MessageRoles.ASSISTANT.getRole())) {
@@ -93,7 +93,7 @@ private void initiateApiCall(ChatMemory chatMemory, MultiEmitter<? super String>
             public void onComplete(Response<AiMessage> response) {
                 Uni.createFrom().item(() -> {
                         messageService.createMessage(response.content().text(), MessageRoles.ASSISTANT, Conversation.findById(conversationId));
-                        return "finished";
+                        return 1;
                     }).runSubscriptionOn(executorService)
                     .subscribe().with(item -> emitter.complete());
             }
