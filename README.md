@@ -1,6 +1,6 @@
 # kk-chat
 
-This Application provides a chat service to communicate with a ai. The ai is prompted to answer questions about the german healthcare system and the digitalization of it. 
+This Application provides a chat ui to communicate with a ai. The ai is prompted to answer questions about the german healthcare system and the digitalization of it. 
 
 Soon i will add RAG to provide better context and less haluzinations of the ai.
 
