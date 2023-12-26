@@ -5,7 +5,6 @@ package de.saschakiebler;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.mutiny.Multi;
 import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
 
@@ -18,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.saschakiebler.dto.ConversationDTO;
 import de.saschakiebler.dto.MessageDTO;
-import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
 import de.saschakiebler.resource.ChatUIResource;
 import de.saschakiebler.service.ChatUIService;
@@ -28,11 +26,8 @@ import de.saschakiebler.service.MessageService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @QuarkusTest
 @ExtendWith(MockitoExtension.class)

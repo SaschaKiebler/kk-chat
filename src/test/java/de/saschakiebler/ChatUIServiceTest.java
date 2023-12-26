@@ -5,9 +5,7 @@ import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
 import de.saschakiebler.service.ChatUIService;
 import de.saschakiebler.service.MessageService;
-import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.mutiny.Multi;
 import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,6 @@ import org.mockito.Mockito;
 import java.util.concurrent.ExecutorService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @QuarkusTest
 class ChatUIServiceTest {
