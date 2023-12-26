@@ -136,7 +136,7 @@ public class ConversationService {
                                         })
                                         .collect(Collectors.toList());
         
-        messages.add(userMessage("give me a title for this conversation without any other text"));
+        messages.add(userMessage("give me a title (one word) for this conversation without any other text"));
 
         String conversationName = model.generate(messages).content().text();
 
