@@ -79,6 +79,17 @@ strong {
     margin-right: 10vw;
 }
 
+@media screen and (max-width: 600px) {
+   
+
+    .conversation{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    
+}
+
 .conversations{
     height: 90vh;
     width: 20vw;
