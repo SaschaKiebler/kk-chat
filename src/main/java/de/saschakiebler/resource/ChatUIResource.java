@@ -73,23 +73,24 @@ public class ChatUIResource {
                              @Context Sse sse,
                              @QueryParam("conversationId") String conversationId) {
         
-        messageService.createMessage(messageText, MessageRoles.USER, conversationService.getConversation(Long.parseLong(conversationId)));
-        Multi<String> responseStream = chatService.streamAnswer(messageText, Long.parseLong(conversationId));
-
-
-
-        responseStream.subscribe().with(
-            item -> {
-                eventSink.send(sse.newEvent(item));
-            },
-            failure -> {
-                eventSink.close();
-            },
-            () -> {
-                eventSink.close();
-            }
-        );
+        try {
+            messageService.createMessage(messageText, MessageRoles.USER, conversationService.getConversation(Long.parseLong(conversationId)));
+            Multi<String> responseStream = chatService.streamAnswer(messageText, Long.parseLong(conversationId));
+    
+            responseStream.subscribe().with(
+                item -> eventSink.send(sse.newEvent(item)),
+                failure -> {
+                    System.out.println("Error in streaming response: " + failure.getMessage());
+                    eventSink.close();
+                },
+                () -> eventSink.close()
+            );
+        } catch (Exception e) {
+            System.out.println("Error in streamAnswer endpoint: " + e.getMessage());
+            eventSink.close();
+        }
     }
+    
 
 
     @GET
@@ -120,7 +121,7 @@ public class ChatUIResource {
     
     @GET
     @Path("/generateConversationName")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response generateConversationName(@QueryParam("conversationId") String conversationIdString) {
         if (
             Conversation.findById(Long.parseLong(conversationIdString)) == null ||
