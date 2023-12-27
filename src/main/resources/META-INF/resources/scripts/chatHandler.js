@@ -12,3 +12,13 @@ function newChat(){
         window.location.href = "/chat?conversationId=" + data["id"];
     })
     }
+
+
+function deleteChat(conversationId){
+    fetch('/chat/deleteConversation?conversationId='+conversationId, {
+        method: 'GET',
+    }).then(response => response.text()).then(data => {
+        console.log(data);
+    }
+        )
+}
