@@ -42,7 +42,6 @@ function convertMarkdownUnorderedLists(markdown) {
         }
     });
 
-    // Schließt die letzte Liste, falls das Ende des Textes erreicht ist
     if (inList) {
         html.push('</ul>');
     }
@@ -55,12 +54,12 @@ function convertMarkdownOrderedList(markdown) {
     let html = [];
 
     markdown.split('\n').forEach(line => {
-        if (/^\d+\./.test(line.trim())) { // Überprüft, ob die Zeile mit einer Zahl und einem Punkt beginnt
+        if (/^\d+\./.test(line.trim())) { 
             if (!inList) {
                 html.push('<ol>');
                 inList = true;
             }
-            html.push('<li>' + line.trim().replace(/^\d+\.\s*/, '') + '</li>'); // Entfernt die Zahl und den Punkt
+            html.push('<li>' + line.trim().replace(/^\d+\.\s*/, '') + '</li>'); 
         } else {
             if (inList) {
                 html.push('</ol>');
@@ -70,7 +69,6 @@ function convertMarkdownOrderedList(markdown) {
         }
     });
 
-    // Schließt die Liste, wenn das Ende des Textes erreicht ist
     if (inList) {
         html.push('</ol>');
     }

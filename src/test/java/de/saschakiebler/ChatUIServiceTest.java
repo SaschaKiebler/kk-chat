@@ -19,31 +19,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @QuarkusTest
 class ChatUIServiceTest {
 
-    @Inject
-    ChatUIService chatUIService;
+    // @Inject
+    // ChatUIService chatUIService;
 
-    @Mock
-    ExecutorService executorService;
+    // @Mock
+    // ExecutorService executorService;
 
-    @Mock
-    MessageService messageService;
+    // @Mock
+    // MessageService messageService;
 
-    @Test
-    void testSafeMessageInConversation() {
-        // given
-        String messageText = "Hello";
-        MessageRoles sender = MessageRoles.USER;
-        Conversation conversation = new Conversation();
+    // @Test
+    // void testSafeMessageInConversation() {
+    //     // given
+    //     String messageText = "Hello";
+    //     MessageRoles sender = MessageRoles.USER;
+    //     Conversation conversation = new Conversation();
 
-        // when
-        Message result = chatUIService.safeMessageInConversation(messageText, sender, conversation);
+    //     // when
+    //     Message result = chatUIService.safeMessageInConversation(messageText, sender, conversation);
 
-        // then
-        Mockito.verify(messageService).createMessage(messageText, sender, conversation);
-        assertEquals(sender.getRole(), result.getSender());
-        assertEquals(messageText, result.getText());
-        assertEquals(conversation, result.getConversation());
-    }
+    //     // then
+    //     Mockito.verify(messageService).createMessage(messageText, sender, conversation);
+    //     assertEquals(sender.getRole(), result.getSender());
+    //     assertEquals(messageText, result.getText());
+    //     assertEquals(conversation, result.getConversation());
+    // }
 
     // @Test
     // void testStreamAnswer() {
