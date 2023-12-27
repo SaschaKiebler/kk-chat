@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat Application</title>
+  <link rel="icon" type="image/x-icon" href="./images/Chatbot_Logo.png">
     <!-- Add your CSS styles here -->
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +18,7 @@
     <div class="chat-container">
     <div class="conversations">
         <ul>
+        <div class="logo"><img src="./images/Chatbot_Logo.png" alt="logo" width="100px" height="100px"></div>
         <li id="dark-mode-btn">dark mode: <input type="checkbox" id="dark-mode" onclick="toggleDarkMode()" checked ></li>
         <li class="new-chat" onclick="newChat()">Neuer Chat +</li>
         {#if conversations.size != 0}
