@@ -16,7 +16,7 @@ function loadMessages(conversationId){
     if(data.name==="new Conversation" && data.messages.length>3){
         fetch('/chat/generateConversationName?conversationId='+conversationId, {
             method: 'GET',
-        }).then(response => response.json()).then(data => {
+        }).then(response => response.text()).then(data => {
             console.log(data);
             document.getElementById(conversationId).innerHTML = data;
         }
