@@ -33,6 +33,23 @@ code {
     max-width: 50vh;
 }
 
+.code {
+    background-color: #f4f4f4;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 80vw;
+    overflow-x: scroll;
+}
+
+.dark-mode .code {
+    background-color: #333;
+}
+
+.dark-mode #arrow {
+    filter: invert(1);
+}
+
 #dark-mode {
     accent-color: var(--highlight-color);
 }
