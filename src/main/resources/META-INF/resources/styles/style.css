@@ -37,12 +37,16 @@ code {
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 10px;
-    max-width: 80vw;
+    max-width: 70vw;
     overflow-x: scroll;
 }
 
 .dark-mode .code {
     background-color: #333;
+}
+
+#arrow {
+    cursor: pointer;
 }
 
 .dark-mode #arrow {
@@ -122,6 +126,7 @@ code {
 
 .conversation{
     width: 100%;
+    max-width: 60vw;
     margin-left: calc(10vw - 25px);
     margin-right: 10vw;
 }
@@ -132,6 +137,7 @@ code {
     .conversation{
         margin-left: 0;
         margin-right: 0;
+        max-width: 100vw;
     }
 
     
@@ -248,6 +254,15 @@ a{
 
     #input{
         width: 75%;
+    }
+
+    .code{
+        max-width: 80vw;
+    }
+
+    .message{
+        max-width: 80vw;
+        overflow-wrap: break-word;
     }
   
 
