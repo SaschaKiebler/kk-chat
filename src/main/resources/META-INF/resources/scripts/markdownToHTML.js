@@ -18,6 +18,7 @@ function convertMarkdownToHTML(markdown) {
 
     markdown = convertMarkdownUnorderedLists(markdown);
     markdown = convertMarkdownOrderedList(markdown);
+    markdown = convertCodeToCodeBlock(markdown);
 
     return markdown;
 }
@@ -74,4 +75,11 @@ function convertMarkdownOrderedList(markdown) {
     }
 
     return html.join('\n');
+}
+
+function convertCodeToCodeBlock(markdown) {
+    markdown = markdown.replace(/`{3}(.*)\n([\s\S]*)\n`{3}/gim, '<pre><code class="$1">$2</code></pre>');
+
+
+    return markdown;
 }

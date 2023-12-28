@@ -19,3 +19,12 @@ function linkActive(){
 
 
 }
+
+
+function toggleConversations() {
+    var element = document.getElementsByClassName("conversations")[0];
+    element.classList.toggle("hidden");
+
+    var arrow = document.getElementById("arrow");
+    arrow.classList.toggle("transform-180");
+}

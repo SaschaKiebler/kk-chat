@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Application</title>
   <link rel="icon" type="image/x-icon" href="./images/Chatbot_Logo.webp">
     <!-- Add your CSS styles here -->
@@ -29,6 +30,9 @@
         {/if}
         </ul>
     </div>
+    <div id="toggleConversations">
+        <img id="arrow" src="./images/arrow.svg" onclick="toggleConversations()">
+    </div>
     <div class="conversation">
         <div id="messages">
 
@@ -40,7 +44,7 @@
                 
             </form>
             
-
+       
         </div>
         </div>
     </div>
