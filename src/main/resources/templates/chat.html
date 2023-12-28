@@ -24,7 +24,7 @@
         <li class="new-chat" onclick="newChat()">Neuer Chat +</li>
         {#if conversations.size != 0}
             {#for conversation in conversations}
-                <a href="/chat?conversationId={conversation.id}"><li id="{conversationId}">{conversation.name}</li></a>
+                <a href="/chat?conversationId={conversation.id}"><li id="{conversation.id}">{conversation.name}</li></a>
             {/for}
         {/if}
         </ul>
