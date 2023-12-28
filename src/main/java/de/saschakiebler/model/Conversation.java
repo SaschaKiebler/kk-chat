@@ -38,6 +38,20 @@ public class Conversation extends PanacheEntity {
         this.timestamp = LocalDateTime.now();
     }
 
+    public Conversation(Long id, String name, LocalDateTime timestamp, List<Message> messages) {
+        this.id = id;
+        this.name = name;
+        this.timestamp = timestamp;
+        this.messages = messages;
+
+    }
+
+    public Conversation(Long id, String name, LocalDateTime timestamp) {
+        this.id = id;
+        this.name = name;
+        this.timestamp = timestamp;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

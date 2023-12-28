@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import de.saschakiebler.dto.ConversationDTO;
 import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.model.Conversation;
+import de.saschakiebler.repository.ConversationRepository;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -23,9 +24,12 @@ public class ConversationService {
     @Inject
     MessageService messageService;
 
+    @Inject
+    ConversationRepository conversationRepository;
+
 
     public Conversation getConversation(Long conversationId) {
-        Conversation conversation = Conversation.findById(conversationId);
+        Conversation conversation = conversationRepository.getConversationById(conversationId);
         return conversation;
     }
 
@@ -33,28 +37,22 @@ public class ConversationService {
    
     public Conversation createConversation() {
         Conversation conversation = new Conversation();
-        Conversation.persist(conversation);
-        return conversation;
         
+        return conversationRepository.createConversation(conversation);  
     }
 
 
 
     public Conversation updateConversation(Conversation conversation, String name) {
-        Conversation.update("name = ?1 where id = ?2", name, conversation.id);
-        Conversation returnConversation = Conversation.findById(conversation.id);
-        if (returnConversation == null) {
-            throw new IllegalArgumentException("Conversation not found");
-        }
-        else {
-            return returnConversation;
-        }
+        
+        conversation.setName(name);
+        return conversationRepository.updateConversation(conversation);
     }
 
 
 
     public List<Conversation> getAllConversations() {
-        List<Conversation> conversations = Conversation.listAll();
+        List<Conversation> conversations = conversationRepository.getAllConversations();
         conversations.sort((o1, o2) -> o2.id.compareTo(o1.id));
         return conversations;
     }
@@ -80,7 +78,7 @@ public class ConversationService {
 
 
      public ConversationDTO getConversationDTO(Long conversationId) {
-        Conversation conversation = Conversation.findById(conversationId);
+        Conversation conversation = getConversation(conversationId);
 
         ConversationDTO conversationDTO = convertToConversationDTO(conversation);
 
@@ -113,7 +111,7 @@ public class ConversationService {
 
 
     public List<MessageDTO> getChatMemory(Long conversationId) {
-        Conversation conversation = Conversation.findById(conversationId);
+        Conversation conversation = getConversation(conversationId);
         List<MessageDTO> messageDTOs = convertToConversationDTO(conversation).getMessages();
         messageDTOs.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
         return messageDTOs;

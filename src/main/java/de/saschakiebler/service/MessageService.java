@@ -4,36 +4,31 @@ import de.saschakiebler.dto.MessageDTO;
 import de.saschakiebler.enums.MessageRoles;
 import de.saschakiebler.model.Conversation;
 import de.saschakiebler.model.Message;
+import de.saschakiebler.repository.MessageRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @Transactional
 @ApplicationScoped
 public class MessageService {
     
+    @Inject
+    MessageRepository messageRepository;
 
     public Message createMessage(String messageText, MessageRoles sender, Conversation conversation) {
         Message message = new Message(sender.getRole(), messageText, conversation);
-        Message.persist(message);
-        return message;
-        
+        return messageRepository.createMessage(message);
     }
 
     public Message updateMessage(Message message, String messageText) {
-        Message.update(messageText, message);
-        Message returnMessage = Message.findById(message.id);
-        if (returnMessage == null) {
-            throw new IllegalArgumentException("Message not found");
-        }
-        else {
-            return returnMessage;
-        }
+        message.setText(messageText);
+        return messageRepository.updateMessage(message);
     }
 
     public Boolean deleteMessage(Message message) {
-        boolean messageDeleted = Message.deleteById(message.id);
-
-        return messageDeleted;
+        messageRepository.deleteMessage(message.getId());
+        return true;
     }
 
 
@@ -45,6 +40,7 @@ public class MessageService {
         messageDTO.setText(message.getText());
         messageDTO.setSender(message.getSender());
         messageDTO.setTimestamp(message.getTimestamp());
+        
         
         return messageDTO;
     }

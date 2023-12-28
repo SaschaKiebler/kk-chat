@@ -74,6 +74,22 @@ public class Message extends PanacheEntity {
     }
 
     /**
+     * Constructor with id, sender, text, and conversation parameters.
+     * 
+     * @param id The id of the message.
+     * @param sender The sender of the message.
+     * @param text The text content of the message.
+     * @param conversation The conversation in which the message was sent.
+     */
+    public Message(Long id, String sender, String text, Conversation conversation) {
+        this.id = id;
+        this.sender = sender;
+        this.text = text;
+        this.timestamp = LocalDateTime.now(); 
+        this.conversation = conversation;
+    }
+
+    /**
      * Get the id of the message.
      * 
      * @return The id of the message.
