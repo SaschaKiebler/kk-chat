@@ -80,6 +80,5 @@ function convertMarkdownOrderedList(markdown) {
 function convertCodeToCodeBlock(markdown) {
     markdown = markdown.replace(/`{3}(.*)\n([\s\S]*)\n`{3}/gim, '<div class="code"><pre><code class="$1">$2</code></pre></div>');
 
-
     return markdown;
 }

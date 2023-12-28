@@ -30,7 +30,6 @@ strong {
 
 code {
     font-family: 'Courier New', Courier, monospace;
-    max-width: 50vh;
 }
 
 .code {
@@ -96,6 +95,11 @@ code {
     border-radius: 5px;
     padding: 5px;
     font-size: 16px;
+}
+
+.dark-mode #input {
+    background-color: #333;
+    color: white;
 }
 
 #submit-btn {
@@ -233,7 +237,10 @@ a{
 
 
 @media screen and (max-width: 600px) {
-    
+
+    .conversations{
+        min-width: fit-content;
+    }
     #submit-button{
         width: 25%;
         margin: 0;
